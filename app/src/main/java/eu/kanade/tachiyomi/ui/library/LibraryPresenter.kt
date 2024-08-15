@@ -795,14 +795,6 @@ class LibraryPresenter(
         return this
     }
 
-    // FIXME: Seems like it's impossible to redirect current implementation to getLibraryFlow(), simply because of how
-    // J2K implements the library UI, both "Show all categories" (not to be confused with "Ungrouped") and
-    // "Show one category at a time" share the same data, which explains why J2K use blankItem instead of checking if
-    // list is empty to show the user if the category is empty or not. Understandable tbh, since it's pretty painful to
-    // maintain these two option on pre-Compose.
-    // ;
-    // Seems like I'll need to completely convert the UI to Compose first.
-
     /**
      * Library's flow.
      *
@@ -814,7 +806,8 @@ class LibraryPresenter(
             getLibraryManga.subscribe(),
             getPreferencesFlow(),
             preferences.removeArticles().changes(),
-        ) { allCategories, libraryMangaList, prefs, removeArticles ->
+            fetchLibrary,
+        ) { allCategories, libraryMangaList, prefs, removeArticles, _ ->
             groupType = prefs.groupType
 
             val data = if (groupType <= BY_DEFAULT || !libraryIsGrouped) {
